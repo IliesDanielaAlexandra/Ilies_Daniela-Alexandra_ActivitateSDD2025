@@ -96,25 +96,81 @@ struct Depozit citireDepozit() {
 		}
 	}
 
+	struct Depozit* filtreazaDepozite(struct Depozit* depozite, int nrDepozite, int* nrFiltrate) {
+		struct Depozit* depoziteFiltrate = (struct Depozit*)malloc(nrDepozite * sizeof(struct Depozit));
+		if (depoziteFiltrate != NULL) {
+			int dep = 0;
+			for (int i = 0; i < nrDepozite; i++) {
+				if (depozite[i].nrProduse < 5) {
+					depoziteFiltrate[dep] = depozite[i];
+					dep++;
+				}
+			}
+		
+		*nrFiltrate = dep;
+		return depoziteFiltrate;
+	}
+
+	}
+
 	// Modificare pret produs 
 
-int main() {
-	struct Depozit depozit = citireDepozit();
-	afisareDepozit(depozit);
-    
-	float mediePreturiDepozit = calculeazaMediePreturi(depozit);
-	printf("Media preturilor pe depozitul :%.2f\n", mediePreturiDepozit);
+	int  main() {
+		struct Depozit depozit = citireDepozit();
+		afisareDepozit(depozit);
+
+		float mediePreturiDepozit = calculeazaMediePreturi(depozit);
+		printf("Media preturilor pe depozitul :%.2f\n", mediePreturiDepozit);
 
 
-	modificareDenumireDepozit(&depozit, "AltexNou");
+		modificareDenumireDepozit(&depozit, "AltexNou");
 
-	modificarePretProdus(&depozit, 2, 150.5);
+		modificarePretProdus(&depozit, 2, 150.5);
 
-	afisareDepozit(depozit);
+		afisareDepozit(depozit);
 
 
-	free(depozit.denumire);
-	free(depozit.preturi);
-	return 0;
+		// tasck 2 Vectori
 
-}
+		int nrDepozite = 5;
+
+		struct Depozit* depozite = (struct Depozit*)malloc(nrDepozite * sizeof(struct Depozit));
+
+		if (depozite != NULL) {
+			for (int i = 0; i < nrDepozite; i++) {
+				printf("Introduceti datele depozitului %d:\n", i + 1);
+				depozite[i] = citireDepozit();
+			}
+
+		}
+		else {
+			printf("erroare alocare depozit");
+			exit(1);
+		}
+		for (int i = 0; i < nrDepozite; i++) {
+			printf("\nInformatii depozit %d:\n", i + 1);
+			afisareDepozit(depozite[i]);
+		}
+
+		for (int i = 0; i < nrDepozite; i++) {
+			free(depozite[i].denumire);
+			free(depozite[i].preturi);
+		}
+
+		int depFiltrate = 0;
+		struct Depozit* depoziteFiltrate = filtreazaDepozite(depozite, nrDepozite, &depFiltrate);
+
+		printf("\nDepozite filtrate:\n");
+		for (int i = 0; i < depFiltrate; i++) {
+			afisareDepozit(depoziteFiltrate[i]);
+		}
+
+
+		free(depozite);
+		free(depoziteFiltrate);
+
+		free(depozit.denumire);
+		free(depozit.preturi);
+		return 0;
+	}
+
