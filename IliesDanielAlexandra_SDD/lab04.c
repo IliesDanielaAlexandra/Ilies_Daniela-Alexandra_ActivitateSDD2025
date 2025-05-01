@@ -9,7 +9,7 @@ struct StructuraMasina {
 	float pret;
 	char* model;
 	char* numeSofer;
-	unsigned char serie;
+    unsigned char serie;
 };
 typedef struct StructuraMasina Masina;
 
@@ -57,7 +57,7 @@ void afisareMasina(Masina masina) {
 	printf("Pret:%.2f\n", masina.pret);
 	printf("Model:%s\n", masina.model);
 	printf("Nume Sofer:%s\n", masina.numeSofer);
-	printf("Serie:%d\n\n", masina.serie);
+	printf("Serie:%c\n\n", masina.serie);
 
 }
 
@@ -122,14 +122,105 @@ void dezalocareLista(Nod* *cap){
 	}
 }
 
+///01,05,2025
 
 
+float calculeazaPretMediu(Nod* cap) {
+	float suma = 0;
+	int contor = 0;
+	while (cap) {
+		suma += cap->info.pret;
+		contor++;
+		cap = cap->next;
+	}
+	if (contor > 0) {
+		return suma/contor;
+	}
+
+	return 0;
+}
+
+
+// pret mediu cu conditie
+
+float calculeazaPretulMasililorUnuiSofer(Nod* cap , const char* numeSofer){
+
+	float suma = 0;
+	while (cap){
+	
+		if (strcmp(cap->info.numeSofer, numeSofer) == 0) {
+			suma += cap->info.pret;
+		}
+		cap = cap->next;
+	}
+	return suma;
+}
+
+
+void stergeMasiniDinSeria(Nod**cap, char serieCautata) {
+
+	while ((*cap) && (*cap)->info.serie == serieCautata) {
+		Nod* aux = *cap;
+		(*cap) = aux->next;
+
+		if (aux->info.numeSofer) {
+			free(aux->info.numeSofer);
+
+		}
+
+		if (aux->info.model) {
+			free(aux->info.model);
+		}
+
+		free(aux);
+
+	}
+	if ((*cap)) {
+
+		Nod* p = *cap;
+		while (p) {
+			while (p->next && p->next->info.serie != serieCautata) {
+				p = p->next;
+			}
+			if (p->next) {
+				Nod* aux = p->next;
+				p->next = aux->next;
+				if (aux->info.numeSofer) {
+					free(aux->info.numeSofer);
+
+				}
+				if (aux->info.model) {
+					free(aux->info.model);
+
+				}
+				free(aux);
+
+			}
+			else {
+				p = NULL;
+			}
+
+		}
+	}
+}
 
 int main(){
 
 	Nod* cap = citireListaMasiniDinFisier("masini.txt");
 	afisareListaMasini(cap);
+	printf("Pretul mediu este : %.2f \n", calculeazaPretMediu(cap));
+	printf("Pretul masinilor unui sofer este : %.2f \n", calculeazaPretulMasililorUnuiSofer(cap, "Ionescu"));
+
+	printf("\nSeria A\n");
+	stergeMasiniDinSeria(&cap,'A');
+
+	afisareListaMasini(cap);
+
+
+
+
 	dezalocareLista(&cap);
+
 
 	return 0;
 }
