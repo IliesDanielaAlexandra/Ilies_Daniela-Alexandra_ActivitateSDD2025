@@ -1,0 +1,5 @@
+1,Catena,95.5,8,Strada_Lalelelor
+2,Sensiblu,120.0,12,Strada_Zorilor
+3,HelpNet,85.0,6,Strada_Trandafirilor
+4,Catena,105.0,15,Strada_Ghiocelului
+5,DrMax,90.0,7,Strada_Magnoliei
